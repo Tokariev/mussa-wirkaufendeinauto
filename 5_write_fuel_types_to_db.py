@@ -64,13 +64,6 @@ def read_model_body_type_from_db(connection) -> list:
     rows = cursor.fetchall()
     return rows
 
-def fetch_single_model_by_model_id(connection, model_id) -> str:
-    cursor = connection.cursor()
-
-    select = """SELECT * FROM models WHERE id = ?"""
-    cursor.execute(select, (model_id,))
-    manufacture_id = cursor.fetchone()
-    return manufacture_id
 
 def fetch_single_model_name_model_id(connection, model_id) -> str:
     cursor = connection.cursor()
@@ -80,21 +73,6 @@ def fetch_single_model_name_model_id(connection, model_id) -> str:
     model = cursor.fetchone()
     return model[0]
 
-def fetch_built_years_by_model_id(connection, model_id) -> list:
-    cursor = connection.cursor()
-
-    select = """SELECT built_year_id FROM model_built_years WHERE model_id = ?"""
-    cursor.execute(select, (model_id,))
-    rows = cursor.fetchall()
-    return rows
-
-def fetch_model_body_types_by_model_id(connection, model_id) -> list:
-    cursor = connection.cursor()
-
-    select = """SELECT * FROM model_body_types WHERE model_id = ?"""
-    cursor.execute(select, (model_id,))
-    rows = cursor.fetchall()
-    return rows
 
 def write_fuel_type_to_db(connection, key, fuel_type):
     cursor = connection.cursor()
@@ -110,22 +88,6 @@ def assign_fuel_type_to_model_body_types(connection, model_body_type_id, fuel_ty
     cursor.execute(insert, (model_body_type_id, fuel_type_id))
     connection.commit()
 
-
-def fetch_all_brands(connection) -> list:
-    cursor = connection.cursor()
-
-    select = """SELECT * FROM brands"""
-    cursor.execute(select)
-    rows = cursor.fetchall()
-    return rows
-
-def fetch_models_by_brand_id(connection, manufacturer_id) -> list:
-    cursor = connection.cursor()
-
-    select = """SELECT * FROM models WHERE manufacturer_id = ?"""
-    cursor.execute(select, (manufacturer_id,))
-    rows = cursor.fetchall()
-    return rows
 
 def fetch_manufacturer_id_by_model_id(connection, model_id) -> str:
     cursor = connection.cursor()
