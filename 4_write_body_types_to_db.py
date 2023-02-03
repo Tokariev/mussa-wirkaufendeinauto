@@ -30,19 +30,21 @@ def create_db_if_not_exists() -> sqlite3.Connection:
 #+-------+-------------+
 
     create_model_body_types_tab = """CREATE TABLE IF NOT EXISTS
-                                        model_body_types(id INTEGER PRIMARY KEY, model_id TEXT,
-                                        built_year_id VARCHAR(4),
-                                        body_type_id VARCHAR(4),
-                                        FOREIGN KEY(built_year_id) REFERENCES built_years(id),
-                                        FOREIGN KEY(body_type_id) REFERENCES body_types(id))"""
+                                        model_body_types(
+                                            id INTEGER PRIMARY KEY,
+                                            model_id TEXT,
+                                            built_year_id VARCHAR(4),
+                                            body_type_id VARCHAR(4),
+                                            FOREIGN KEY(built_year_id) REFERENCES built_years(id),
+                                            FOREIGN KEY(body_type_id) REFERENCES body_types(id))"""
 
-#body_type_fuel_types
-#+--------------------+---------------+
-#| model_body_type_id | fuel_type_id  |
-#+--------------------+---------------+
-#| 1                  | 1007          |
-#| 1                  | 1008          |
-#+--------------------|---------------|
+#model_body_types
+#+----+----------+---------------+--------------+
+#| id | model_id | built_year_id | body_type_id |
+#+----+----------+---------------+--------------+
+#| 1  | 1        | 2003          |1007          |
+#| 2  | 1        | 2003          |1008          |
+#+----+----------+---------------|--------------|
 
     cursor.execute(drop_body_types_tab)
     cursor.execute(drop_model_body_types_tab)
