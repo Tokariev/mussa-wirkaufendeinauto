@@ -1,0 +1,14 @@
+[
+    {
+        "marke": "BMW",
+        "modell": "3er",
+        "erstzulassung": "2015",
+        "baufoem": "Limousine",
+        "kraftstoff": "Benzin",
+        "modellvariante": "320i",
+        "ps": [
+            "125",
+            "135"
+        ]
+    }
+]
