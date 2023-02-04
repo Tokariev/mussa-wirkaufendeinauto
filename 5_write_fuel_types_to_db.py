@@ -84,6 +84,13 @@ def write_fuel_type_to_db(connection, key, fuel_type):
 def assign_fuel_type_to_model_body_types(connection, model_body_type_id, fuel_type_id):
     cursor = connection.cursor()
 
+    # check if fuel_type_id is already assigned to model_body_type_id
+    select = """SELECT * FROM body_type_fuel_types WHERE model_body_type_id = ? AND fuel_type_id = ?"""
+    cursor.execute(select, (model_body_type_id, fuel_type_id))
+    rows = cursor.fetchall()
+    if len(rows) > 0:
+        return
+
     insert = """INSERT OR IGNORE INTO body_type_fuel_types (model_body_type_id, fuel_type_id) VALUES (?, ?)"""
     cursor.execute(insert, (model_body_type_id, fuel_type_id))
     connection.commit()
