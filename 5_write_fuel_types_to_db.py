@@ -10,7 +10,7 @@ import sqlite3
 import time
 from dao import get_connection
 import requests
-
+import asyncio
 
 
 
@@ -112,7 +112,15 @@ def fetch_body_types_by_year_and_model_id(connection, built_year_id, model_id) -
     rows = cursor.fetchall()
     return rows
 
-def run():
+async def fetch_fuel_types(connection, url, model_body_type_id, count):
+    fuel_types = requests.get(url).json()
+
+    for fuel_key, value in fuel_types["wkda"].items():
+        write_fuel_type_to_db(connection, fuel_key, value)
+        assign_fuel_type_to_model_body_types(connection, model_body_type_id, fuel_key)
+    print(f"Finish {count}")
+
+async def main():
     connection = create_db_if_not_exists()
     model_body_types = read_model_body_type_from_db(connection)
 
@@ -129,13 +137,11 @@ def run():
             body_type_id = body_type[3]
 
             url = f"https://api-mcj.wkda.de/v1/cardata/types/fuel-types?manufacturer={manufacturer_id}&main-type={model_name}&built-year={buily_yead_id}&body-type={body_type_id}&locale=de-DE&country=de"
-            fuel_types = requests.get(url).json()
 
-            for fuel_key, value in fuel_types["wkda"].items():
-                write_fuel_type_to_db(connection, fuel_key, value)
-                assign_fuel_type_to_model_body_types(connection, model_body_type_id, fuel_key)
+            task = asyncio.create_task(fetch_fuel_types(connection, url, model_body_type_id, count))
+
         count += 1
         print(f"count: {count} / {len(model_body_types)}")
 
 if __name__ == "__main__":
-    run()
+    asyncio.run(main())
