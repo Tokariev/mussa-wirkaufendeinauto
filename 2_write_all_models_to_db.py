@@ -10,7 +10,11 @@ def create_db_if_not_exists() -> sqlite3.Connection:
     drop_models_if_exists = """DROP TABLE IF EXISTS models"""
 
     create_marken_tab = """CREATE TABLE IF NOT EXISTS
-                            models(id INTEGER PRIMARY KEY, model TEXT, manufacturer_id VARCHAR(3), FOREIGN KEY(manufacturer_id) REFERENCES marken(manufacturer))"""
+                            models(
+                                id INTEGER PRIMARY KEY,
+                                model TEXT,
+                                manufacturer_id VARCHAR(3),
+                                FOREIGN KEY(manufacturer_id) REFERENCES brands(manufacturer))"""
 
     cursor.execute(drop_models_if_exists)
     cursor.execute(create_marken_tab)
