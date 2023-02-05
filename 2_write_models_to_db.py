@@ -17,7 +17,7 @@ def create_db_if_not_exists() -> sqlite3.Connection:
                                 brand_id VARCHAR(3),
                                 FOREIGN KEY(brand_id) REFERENCES brands(id))"""
 
-    cursor.execute(drop_models_if_exists)
+    # cursor.execute(drop_models_if_exists)
     cursor.execute(create_models_tab)
     return connection
 
@@ -56,7 +56,7 @@ def main():
         models = response.json()
         for key, model in models["wkda"].items():
             modetdto = ModelDto(model, brand_id)
-            write_modell_to_db(connection, modetdto)
+            # write_modell_to_db(connection, modetdto)
 
 
 if __name__ == "__main__":

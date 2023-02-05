@@ -10,6 +10,7 @@ import sqlite3
 import time
 from dao import get_connection
 import requests
+from dto.BuiltYearDto import BuiltYearDto
 
 
 def create_db_if_not_exists() -> sqlite3.Connection:
@@ -17,28 +18,19 @@ def create_db_if_not_exists() -> sqlite3.Connection:
     cursor = connection.cursor()
 
     drop_built_years_tab = """DROP TABLE IF EXISTS built_years"""
-    drop_model_built_years_tab = """DROP TABLE IF EXISTS model_built_years"""
+
 
     create_built_years_tab = """CREATE TABLE IF NOT EXISTS
-                                built_years(id VARCHAR(4) PRIMARY KEY, year)"""
-
-#model_built_years
-#+----+----------+---------------+
-#| id | model_id | built_year_id |
-#+----+----------+---------------+
-#| 1  | 1        | 2009          |
-#| 2  | 1        | 2010          |
-#+----+----------+---------------+
-
-    create_model_built_years_tab = """CREATE TABLE IF NOT EXISTS
-                           model_built_years(id INTEGER PRIMARY KEY, model_id TEXT, built_year_id VARCHAR(4), FOREIGN KEY(model_id) REFERENCES models(id), FOREIGN KEY(built_year_id) REFERENCES built_years(id))"""
-
+                                built_years(
+                                    id INTEGER PRIMARY KEY,
+                                    year INTEGER,
+                                    model_id INTEGER,
+                                    FOREIGN KEY(model_id) REFERENCES models(id))"""
 
     cursor.execute(drop_built_years_tab)
-    cursor.execute(drop_model_built_years_tab)
+
 
     cursor.execute(create_built_years_tab)
-    cursor.execute(create_model_built_years_tab)
     return connection
 
 
@@ -51,13 +43,13 @@ def read_models_from_db(connection) -> list:
     return models
 
 
-def write_built_year_to_db(connection, id, year):
+def write_built_year_to_db(connection, builtYearDto: BuiltYearDto):
     cursor = connection.cursor()
 
     try:
-        insert = """INSERT OR IGNORE INTO built_years(id, year)
+        insert = """INSERT INTO built_years(year, model_id)
                     VALUES (?, ?)"""
-        val = (id, year)
+        val = (builtYearDto.year, builtYearDto.model_id)
         cursor.execute(insert, val)
         connection.commit()
     except sqlite3.Error as error:
@@ -94,9 +86,9 @@ def main():
 
         years = response.json()
         for year_key, year in years["wkda"].items():
-            write_built_year_to_db(connection, year_key, year)
-            assign_built_year_to_model(connection, model_id, year_key)
-            time.sleep(0.1)
+            builtYearDto = BuiltYearDto(year, model_id)
+            write_built_year_to_db(connection, builtYearDto)
+            # assign_built_year_to_model(connection, model_id, year_key)
 
 
 if __name__ == "__main__":

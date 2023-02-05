@@ -1,7 +1,7 @@
-from dto.BrandDto import BrandDto
+from dataclasses import dataclass
+from typing import Type
 
-
+@dataclass(frozen=True)
 class ModelDto:
-    def __init__(self, model: str, brand_id: str) -> None:
-        self.model = model
-        self.brand_id = brand_id
+    model : str
+    brand_id : str
