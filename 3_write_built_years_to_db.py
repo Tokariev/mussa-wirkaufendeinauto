@@ -81,7 +81,7 @@ def assign_built_year_to_model(connection, model_id, built_year_id):
         if cursor:
             cursor.close()
 
-def run():
+def main():
     connection = create_db_if_not_exists()
     models = read_models_from_db(connection)
     for model in models:
@@ -100,4 +100,4 @@ def run():
 
 
 if __name__ == "__main__":
-    run()
+    main()

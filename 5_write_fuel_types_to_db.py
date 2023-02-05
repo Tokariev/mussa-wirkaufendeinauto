@@ -112,7 +112,7 @@ def fetch_body_types_by_year_and_model_id(connection, built_year_id, model_id) -
     rows = cursor.fetchall()
     return rows
 
-async def fetch_fuel_types(connection, url, model_body_type_id, count):
+def fetch_fuel_types(connection, url, model_body_type_id, count):
     fuel_types = requests.get(url).json()
 
     for fuel_key, value in fuel_types["wkda"].items():
@@ -120,7 +120,7 @@ async def fetch_fuel_types(connection, url, model_body_type_id, count):
         assign_fuel_type_to_model_body_types(connection, model_body_type_id, fuel_key)
     print(f"Finish {count}")
 
-async def main():
+def main():
     connection = create_db_if_not_exists()
     model_body_types = read_model_body_type_from_db(connection)
 
@@ -138,10 +138,11 @@ async def main():
 
             url = f"https://api-mcj.wkda.de/v1/cardata/types/fuel-types?manufacturer={manufacturer_id}&main-type={model_name}&built-year={buily_yead_id}&body-type={body_type_id}&locale=de-DE&country=de"
 
-            task = asyncio.create_task(fetch_fuel_types(connection, url, model_body_type_id, count))
+            # task = asyncio.create_task(fetch_fuel_types(connection, url, model_body_type_id, count))
+            fetch_fuel_types(connection, url, model_body_type_id, count)
 
         count += 1
         print(f"count: {count} / {len(model_body_types)}")
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()

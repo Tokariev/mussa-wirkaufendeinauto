@@ -2,25 +2,30 @@ import json
 import sqlite3
 import requests
 from dao import get_connection
+from dto.BrandDto import BrandDto
 
 def create_db_if_not_exists() -> sqlite3.Connection:
     connection = get_connection()
     cursor = connection.cursor()
 
+    drop_brands_tab = """DROP TABLE IF EXISTS brands"""
     create_brands_tab = """CREATE TABLE IF NOT EXISTS
-                            brands(manufacturer VARCHAR(3) PRIMARY KEY, brand)"""
+                            brands(
+                                id VARCHAR(3) PRIMARY KEY,
+                                brand VARCHAR(30))"""
 
+    cursor.execute(drop_brands_tab)
     cursor.execute(create_brands_tab)
     return connection
 
 
-def write_marke_to_db(connection, manufacturer, brand):
+def write_marke_to_db(connection, branddto: BrandDto):
     cursor = connection.cursor()
 
     try:
-        insert = """INSERT OR IGNORE INTO brands(manufacturer, brand)
+        insert = """INSERT INTO brands(id, brand)
                     VALUES (?, ?)"""
-        val = (manufacturer, brand)
+        val = (branddto.id, branddto.brand)
         cursor.execute(insert, val)
         connection.commit()
     except sqlite3.Error as error:
@@ -39,4 +44,5 @@ if __name__ == "__main__":
     connection = create_db_if_not_exists()
     marke_modelle = []
     for manufacturer, brand in wkda.items():
-        write_marke_to_db(connection, manufacturer, brand)
+        branddto = BrandDto(manufacturer, brand)
+        write_marke_to_db(connection, branddto)

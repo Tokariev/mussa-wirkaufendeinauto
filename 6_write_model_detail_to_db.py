@@ -123,7 +123,7 @@ def assign_model_details_to_model_body_types_and_fuel_variant(connection, body_t
     cursor.execute(insert, (body_type_fuel_type_id, model_variant_key))
     connection.commit()
 
-def run():
+def main():
     connection = create_db_if_not_exists()
     model_body_types = read_model_body_type_from_db(connection)
 
@@ -152,4 +152,4 @@ def run():
         print(f"count: {count} / {len(model_body_types)}")
 
 if __name__ == "__main__":
-    run()
+    main()

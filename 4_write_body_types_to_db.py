@@ -32,9 +32,10 @@ def create_db_if_not_exists() -> sqlite3.Connection:
     create_model_body_types_tab = """CREATE TABLE IF NOT EXISTS
                                         model_body_types(
                                             id INTEGER PRIMARY KEY,
-                                            model_id TEXT,
+                                            model_id INTEGER,
                                             built_year_id VARCHAR(4),
                                             body_type_id VARCHAR(4),
+                                            FOREIGN KEY(model_id) REFERENCES models(id),
                                             FOREIGN KEY(built_year_id) REFERENCES built_years(id),
                                             FOREIGN KEY(body_type_id) REFERENCES body_types(id))"""
 
@@ -102,7 +103,7 @@ def get_body_types(manufacturer, model, built_year):
     data = response.json()
     return data["wkda"]
 
-def run():
+def main():
     connection = create_db_if_not_exists()
     models = read_models_from_db(connection)
     for model in models:
@@ -127,4 +128,4 @@ def run():
 
 
 if __name__ == '__main__':
-    run()
+    main()
