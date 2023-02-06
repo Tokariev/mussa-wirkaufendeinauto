@@ -7,8 +7,7 @@ import sqlite3
 import time
 from dao import get_connection
 import requests
-from dto.BodyTypeDto import BodyTypeDto
-from dto.BodyTypeTextDto import BodyTypeTextDto
+from dto.BodyTypeDto import BodyTypeDto, BodyTypeTextDto
 
 
 
@@ -23,18 +22,19 @@ def create_db_if_not_exists() -> sqlite3.Connection:
     create_built_years_tab = """CREATE TABLE IF NOT EXISTS
                                     body_types(
                                         id INTEGER PRIMARY KEY,
-                                        body_type VARCHAR(30),
+                                        body_type INTEGER,
                                         built_year_id INTEGER,
                                         FOREIGN KEY(built_year_id) REFERENCES built_years(id) )"""
 
     create_body_types_text_tab = """CREATE TABLE IF NOT EXISTS
                                         body_types_text(
-                                            body_type VARCHAR(30) PRIMARY KEY,
+                                            body_type INTEGER,
                                             lang VARCHAR(2),
-                                            text VARCHAR(30) )"""
+                                            text VARCHAR(30),
+                                            PRIMARY KEY(body_type, lang) )"""
 
-    cursor.execute(drop_body_types_tab)
-    cursor.execute(drop_body_types_text_tab)
+    # cursor.execute(drop_body_types_tab)
+    # cursor.execute(drop_body_types_text_tab)
     cursor.execute(create_built_years_tab)
     cursor.execute(create_body_types_text_tab)
 
@@ -91,6 +91,15 @@ def fetch_model(connection, model_id: int) -> str:
     model = cursor.fetchone()
     return model[0]
 
+def check_if_body_types_already_assigned_to_built_year_id(connection, built_year_id: int):
+    cursor = connection.cursor()
+
+    select = """SELECT * FROM body_types WHERE built_year_id = ?"""
+    cursor.execute(select, (built_year_id,))
+    body_types = cursor.fetchall()
+    if len(body_types) > 0:
+        return True
+
 def main():
     connection = create_db_if_not_exists()
 
@@ -103,6 +112,9 @@ def main():
         model = fetch_model(connection, model_id)
         brand_id = fetch_brand_id(connection, model_id)
 
+        if check_if_body_types_already_assigned_to_built_year_id(connection, built_year_id):
+            count += 1
+            continue
 
         url = f"https://api-mcj.wkda.de/v1/cardata/types/body-types?manufacturer={brand_id}&main-type={model}&built-year={built_year}&locale=de-DE&country=de"
         response = requests.get(url)
@@ -117,7 +129,7 @@ def main():
             write_body_type_text_to_db(connection, body_type_text_dto)
 
         count += 1
-        print(f"count: {count} / {len(built_years)}")
+        print(f"Built year count: {count} / {len(built_years)}")
 
     connection.close()
 

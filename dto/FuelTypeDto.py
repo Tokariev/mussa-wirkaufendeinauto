@@ -2,13 +2,13 @@ from dataclasses import dataclass
 
 
 @dataclass(frozen=True)
-class BodyTypeDto:
-    body_type: int
-    built_year_id: int
+class FuelTypeDto:
+    fuel_type: int
+    body_type_id: int
 
 
 @dataclass(frozen=True)
-class BodyTypeTextDto:
-    body_type: int
+class FuelTypeTextDto:
+    fuel_type: int
     lang: str
     text: str
