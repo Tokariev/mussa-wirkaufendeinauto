@@ -1,15 +1,6 @@
 
-
-# rerquest
-# https://api-mcj.wkda.de/v1/cardata/types/fuel-types?manufacturer=130&main-type=3er&built-year=2003&body-type=1025&locale=de-DE&country=de
-
-# response
-# { 1039: "Benzin", 1040: "Diesel" }
-
-
 import asyncio
 import sqlite3
-import time
 from dao import get_connection
 import requests
 from dto.ModelVariantDto import ModelVariantDto, ModelVariantTextDto
@@ -37,8 +28,8 @@ def create_db_if_not_exists() -> sqlite3.Connection:
                                                     text VARCHAR(30),
                                                     PRIMARY KEY(model_variant, lang) )"""
 
-    cursor.execute(drop_model_variants_tab)
-    cursor.execute(drop_model_variants_text_tab)
+    # cursor.execute(drop_model_variants_tab)
+    # cursor.execute(drop_model_variants_text_tab)
     cursor.execute(create_model_variants_tab)
     cursor.execute(create_model_variants_text_tab)
 

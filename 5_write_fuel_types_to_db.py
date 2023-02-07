@@ -1,13 +1,5 @@
 
-# rerquest
-# https://api-mcj.wkda.de/v1/cardata/types/fuel-types?manufacturer=130&main-type=3er&built-year=2003&body-type=1025&locale=de-DE&country=de
-
-# response
-# { 1039: "Benzin", 1040: "Diesel" }
-
-
 import sqlite3
-import time
 from dao import get_connection
 import requests
 import asyncio
