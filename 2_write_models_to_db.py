@@ -31,7 +31,7 @@ def read_all_brands_from_db(connection):
 
 def write_modell_to_db(connection, modeldto: ModelDto):
     cursor = connection.cursor()
-
+    print(modeldto)
     try:
         insert = """INSERT OR IGNORE INTO models(model, brand_id)
                     VALUES (?,?)"""
@@ -47,16 +47,18 @@ def write_modell_to_db(connection, modeldto: ModelDto):
 def main():
     connection = create_db_if_not_exists()
     brands = read_all_brands_from_db(connection)
-    for brand in brands:
-        brand_id = brand[0]
-        print(brand_id, brand[1])
-        url = f"https://api-mcj.wkda.de/v1/cardata/types/main-types?manufacturer={brand_id}&locale=de-DE&country=de"
+    for brand_row in brands:
+        manufacturer = brand_row[0]
+        brand = brand_row[1]
+        print(manufacturer, brand)
+        url = f"https://api-mcj.wkda.de/v1/cardata/types/main-types?manufacturer={manufacturer}&locale=de-DE&country=de"
+        
         response = requests.get(url)
-
         models = response.json()
+
         for key, model in models["wkda"].items():
-            modetdto = ModelDto(model, brand_id)
-            # write_modell_to_db(connection, modetdto)
+            modetdto = ModelDto(model, manufacturer)
+            write_modell_to_db(connection, modetdto)
 
 
 if __name__ == "__main__":

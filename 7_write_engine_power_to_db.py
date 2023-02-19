@@ -1,11 +1,7 @@
-import asyncio
 import sqlite3
-import time
 from dao import get_connection
 import requests
 from dto.EnginePowerDto import EnginePowerDto
-# Horse power
-# https://api-mcj.wkda.de/v1/cardata/types/kw?manufacturer=130&main-type=3er&built-year=2011&body-type=1008&fuel-type=1039&main-type-detail=320i&locale=de-DE&country=de
 
 def create_db_if_not_exists() -> sqlite3.Connection:
     connection = get_connection()
@@ -19,7 +15,7 @@ def create_db_if_not_exists() -> sqlite3.Connection:
                                         model_variant_id INTEGER,
                                         FOREIGN KEY(model_variant_id) REFERENCES model_variants(id) )"""
 
-    cursor.execute(drop_engine_power_tab)
+    # cursor.execute(drop_engine_power_tab)
     cursor.execute(create_engine_power_tab)
 
     return connection

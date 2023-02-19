@@ -1,10 +1,6 @@
 
 
-#https://api-mcj.wkda.de/v1/cardata/types/body-types?manufacturer={manufacturer}&main-type=3er&built-year=2003&locale=de-DE&country=de
-
-
 import sqlite3
-import time
 from dao import get_connection
 import requests
 from dto.BodyTypeDto import BodyTypeDto, BodyTypeTextDto

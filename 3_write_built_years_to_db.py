@@ -1,13 +1,5 @@
 
-
-# https://www.digitalocean.com/community/tutorials/how-to-use-many-to-many-database-relationships-with-flask-and-sqlite
-
-# https://api-mcj.wkda.de/v1/cardata/types/built-years?manufacturer=130&main-type=3er&locale=de-DE&country=de
-# url = f"https://api-mcj.wkda.de/v1/cardata/types/built-years?manufacturer={manufacturer}&main-type={model}&locale=de-DE&country=de"
-
-
 import sqlite3
-import time
 from dao import get_connection
 import requests
 from dto.BuiltYearDto import BuiltYearDto
@@ -27,9 +19,7 @@ def create_db_if_not_exists() -> sqlite3.Connection:
                                     model_id INTEGER,
                                     FOREIGN KEY(model_id) REFERENCES models(id))"""
 
-    cursor.execute(drop_built_years_tab)
-
-
+    # cursor.execute(drop_built_years_tab)
     cursor.execute(create_built_years_tab)
     return connection
 
