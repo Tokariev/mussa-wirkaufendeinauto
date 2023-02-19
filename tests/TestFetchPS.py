@@ -1,18 +1,18 @@
 import unittest
-import os
+from EnginePower import EnginePower
+from dao import get_connection
 
+class TestModelDetail(unittest.TestCase):
+    def setUp(self):
+        self.enginePower = EnginePower()
+        self.connection = get_connection()
 
-# https://api-mcj.wkda.de/v1/cardata/types/main-types-sub?manufacturer=060&main-type=A6&built-year=2022&body-type=1025&fuel-type=1040&main-type-detail=50 TDI&kw=180.00&gear-type=1141&door-count=4&short-form=false&locale=de-DE&country=de
+    def test_fetch_models_details(self):
+        BMW_3_SERIES_2003_LIMOUSINE_BENZIN_316i = 1351
 
-# Input data:
-# manufacturer_id = 060
-# model_name = A6
-# built_year = 2022
-# body_type_id = 1025
-# fuel_type = 1040
+        exp = [
+            (1702, 85, 1351) # 85 kW
+            ]
 
-
-# Output data:
-# model_detail = 45 TDI
-# model_detail = 50 TDI
-
+        act = self.enginePower.fetch_engine_powers(self.connection, BMW_3_SERIES_2003_LIMOUSINE_BENZIN_316i)
+        self.assertEqual(exp, act)

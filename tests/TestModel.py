@@ -38,5 +38,5 @@ class TestModel(unittest.TestCase):
                 (31, 'Z8', '130')
             ]
 
-        act = self.model.fetch_models_by_manufacturer(self.connection, manufacturer)
+        act = self.model.fetch_models_by_brand(self.connection, manufacturer)
         self.assertEqual(exp, act)

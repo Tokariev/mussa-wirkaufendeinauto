@@ -58,20 +58,6 @@ def write_built_year_to_db(connection, builtYearDto: BuiltYearDto):
         if cursor:
             cursor.close()
 
-def assign_built_year_to_model(connection, model_id, built_year_id):
-    cursor = connection.cursor()
-
-    try:
-        insert = """INSERT OR IGNORE INTO model_built_years(model_id, built_year_id)
-                    VALUES (?, ?)"""
-        val = (model_id, built_year_id)
-        cursor.execute(insert, val)
-        connection.commit()
-    except sqlite3.Error as error:
-        print("Failed to insert data into sqlite table", error)
-    finally:
-        if cursor:
-            cursor.close()
 
 def main():
     connection = create_db_if_not_exists()
@@ -88,7 +74,6 @@ def main():
         for year_key, year in years["wkda"].items():
             builtYearDto = BuiltYearDto(year, model_id)
             write_built_year_to_db(connection, builtYearDto)
-            # assign_built_year_to_model(connection, model_id, year_key)
 
 
 if __name__ == "__main__":

@@ -12,10 +12,10 @@ class TstFuelType(unittest.TestCase):
         self.connection = get_connection()
 
     def test_fetch_fuel_types(self):
-        BMW_3_SERIES_2010_KOMBI = 185
-        act = self.cut.fetch_fuel_types(self.connection, BMW_3_SERIES_2010_KOMBI)
+        BMW_3_SERIES_2003_LIMOUSINE = 216
+        act = self.cut.fetch_fuel_types(self.connection, BMW_3_SERIES_2003_LIMOUSINE)
         exp = [
-            (335, 185, 1039),
-            (336, 185, 1040),
+            (358, 1039, 216), # Benzin
+            (359, 1040, 216)
         ]
         self.assertEqual(exp, act)

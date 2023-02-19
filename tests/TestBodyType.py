@@ -12,14 +12,13 @@ class TestBodyType(unittest.TestCase):
         self.connection = get_connection()
 
     def test_fetch_body_types(self):
-        BMW_3er = '10'
-        BUILT_YEAR_2010 = '2010'
+        BUILT_YEAR_2003_ID = '134'
 
         exp = [
-            (183, '10', '2010', '1008'),
-            (184, '10', '2010', '1009'),
-            (185, '10', '2010', '1023'),
-            (186, '10', '2010', '1025')]
+            (213, 1007, 134),
+            (214, 1008, 134),
+            (215, 1023, 134),
+            (216, 1025, 134)] # Limousine
 
-        act = self.body_type.fetch_body_types(self.connection, BMW_3er, BUILT_YEAR_2010)
+        act = self.body_type.fetch_body_types(self.connection, BUILT_YEAR_2003_ID)
         self.assertEqual(exp, act)
